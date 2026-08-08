@@ -29,4 +29,26 @@ This pipeline removes that manual step entirely. Feed it a video, and every pers
 |---|---|
 | ![original](original_frame.png) | ![blurred](blurred.png) |
 
+
+### Demo Video : https://drive.google.com/file/d/1Qg8mR14vf6fIZHqViSyWofI5M3HpX5XT/view?usp=sharing
+
+### Real-World Application 
+
+This solves a genuine, everyday friction point: footage that's useful but can't be shared because it identifies a bystander.
+
+Dashcam footage — sharing proof of an incident (accident, near-miss, road rage) without exposing every pedestrian and driver caught in frame
+CCTV / security footage — handing footage to a landlord, insurer, or law enforcement without manually redacting everyone except the subject in question
+Interview & documentary footage — publishing content where background people didn't consent to appear
+Compliance-driven redaction at scale — any organization currently paying someone to manually blur faces in Premiere or After Effects, frame by frame, for every clip they release
+
+The pipeline takes any video file as input and requires zero manual intervention — point it at footage, get back a shareable, privacy-safe version.
+
+
+### Real-World Impact 
+
+Right now, the actual blocker to sharing sensitive footage usually isn't a technical one — it's that manual redaction doesn't scale. A 10-second clip isn't "worth" someone's time to hand-blur, so it just doesn't get shared, and useful evidence, content, or documentation stays locked away.
+
+This pipeline removes that cost entirely. At ~154 FPS on a single consumer laptop GPU, redaction stops being a bottleneck — it becomes a one-command step in a footage-sharing workflow, at a speed and cost that makes "just blur it" the default instead of the exception.
+
+Broader detection choice matters here too: this redacts the whole person (not just a cropped face), which is the more useful behavior for real dashcam/CCTV use cases — a face can turn away from camera, but a person-level box stays meaningful redaction regardless of angle.
 The detector (YOLOv8m, TensorRT-compiled at FP16) finds the person in every frame, and a custom blur stage — generated and wired in by PipeGen as part of the compiled pipeline — redacts them before the frame ever reaches the output file. What used to be a manual, frame-by-frame editing task becomes a single automated pass: point it at a video, get back a privacy-safe one.
