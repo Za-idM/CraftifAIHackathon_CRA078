@@ -27,6 +27,7 @@ This pipeline removes that manual step entirely. Feed it a video, and every pers
 
 | Original frame | Pipeline output |
 |---|---|
-| ![original](screenshots/original_frame.png) | ![blurred](screenshots/blurred_frame.png) |
+![original](original_frame.png)
+![blurred](blurred.png)
 
 The detector (YOLOv8m, TensorRT-compiled at FP16) finds the person in every frame, and a custom blur stage — generated and wired in by PipeGen as part of the compiled pipeline — redacts them before the frame ever reaches the output file. What used to be a manual, frame-by-frame editing task becomes a single automated pass: point it at a video, get back a privacy-safe one.
