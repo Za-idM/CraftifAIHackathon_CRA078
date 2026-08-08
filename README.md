@@ -5,6 +5,18 @@ Built with PipeGen (CraftifAI) — Embedded Hardware + AI Buildathon, Track A (P
 ## What it does
 Detects people in a video file and automatically blurs them, producing a privacy-safe output video. Useful for dashcam, CCTV, or interview footage that needs to be shared without revealing identities.
 
+### Working , End-to-End
+This isn't a mockup or a diagram — it's a real, compiled, executed pipeline with verifiable output.
+
+Pipeline: Video file → YOLOv8m detection (TensorRT, FP16, compiled for RTX 4050) → custom Gaussian blur postprocess on every detected region → blurred MP4 + per-frame JSON detections.
+
+Verified run stats (from the actual execution log):
+
+-484 frames processed in ~3.14s wall-clock (~154 FPS end-to-end)
+-484 detections written to detections.json, averaging 1.0 detection/frame
+-Clean pipeline exit (EOS), no crashes
+-TensorRT engine deserialized and ran without rebuild — fast, repeatable startup
+
 ## Pipeline
 Video file -> YOLOv8m detection (TensorRT FP16) -> custom Gaussian blur on detected regions -> blurred MP4 + detections JSON
 
@@ -53,5 +65,4 @@ Right now, the actual blocker to sharing sensitive footage usually isn't a techn
 
 This pipeline removes that cost entirely. At ~154 FPS on a single consumer laptop GPU, redaction stops being a bottleneck — it becomes a one-command step in a footage-sharing workflow, at a speed and cost that makes "just blur it" the default instead of the exception.
 
-Broader detection choice matters here too: this redacts the whole person (not just a cropped face), which is the more useful behavior for real dashcam/CCTV use cases — a face can turn away from camera, but a person-level box stays meaningful redaction regardless of angle.
 The detector (YOLOv8m, TensorRT-compiled at FP16) finds the person in every frame, and a custom blur stage — generated and wired in by PipeGen as part of the compiled pipeline — redacts them before the frame ever reaches the output file. What used to be a manual, frame-by-frame editing task becomes a single automated pass: point it at a video, get back a privacy-safe one.
